@@ -1,0 +1,174 @@
+Code for Mux 2 to 1:-
+-----------------------
+
+module Mux2to1(
+    input a,b,s,
+    output y
+    );
+    wire w1,w2;
+    and(w1,a,!s);
+    and(w2,b,s);
+    or(y,w1,w2);
+endmodule
+
+Test Bench:-
+-------------
+module Mux2to1_tb;
+reg a,b,s;
+wire y;
+Mux2to1 uut(.a(a),.b(b),.s(s),.y(y));
+initial
+    begin
+        s=0;a=1;b=0;#100;
+        s=1;a=1;b=1;#100;
+        s=1;a=0;b=1;#100;
+        s=1;a=1;b=1;#100;
+        
+    end
+endmodule
+
+Code for Mux 4 to 1:-
+------------------------
+module Mux4to1(
+    input a,b,c,d,s0,s1,
+    output y
+    );
+    wire w1,w2;
+    Mux2to1 m1 (.a(a),.b(b),.s(s0),.y(w1));
+    Mux2to1 m2 (.a(c),.b(d),.s(s0),.y(w2));
+    Mux2to1 m3 (.a(w1),.b(w2),.s(s1),.y(y));
+endmodule
+
+Test Bench:-
+-------------
+module Mux4to1_tb;
+reg a,b,c,d,s0,s1;
+wire y;
+Mux4to1 uut(.a(a),.b(b),.c(c),.d(d),.s0(s0),.s1(s1),.y(y));
+initial
+    begin
+        a=1;b=0;c=0;d=0;s0=0;s1=0;#100;
+        a=0;b=1;c=0;d=0;s0=0;s1=1;#100;
+        a=0;b=0;c=1;d=0;s0=1;s1=0;#100;
+        a=0;b=0;c=0;d=1;s0=1;s1=1;#100;
+        
+    end
+endmodule
+
+Code for Mux 8 to 1:-
+------------------------
+module Mux8to1(
+    input a,b,c,d,e,f,g,h,s0,s1,s2,
+    output y
+    );
+    wire w1,w2;
+    Mux4to1 m4 (.a(a),.b(b),.c(c),.d(d),.s0(s0),.s1(s1),.y(w1));
+    Mux4to1 m5 (.a(e),.b(f),.c(g),.d(h),.s0(s0),.s1(s1),.y(w2));
+    Mux2to1 m6(.a(w1),.b(w2),.s(s2),.y(y));
+    
+endmodule
+
+Test Bench:-
+-------------
+module Mux8to1_tb;
+reg a,b,c,d,e,f,g,h,s0,s1,s2;
+wire y;
+Mux8to1 uut(.a(a),.b(b),.c(c),.d(d),.e(e),.f(f),.g(g),.h(h),.s0(s0),.s1(s1),.s2(s2),.y(y));
+initial
+    begin
+        a=1;b=0;c=0;d=0;e=0;f=0;g=0;h=0;s0=0;s1=0;s2=0;#100;
+        a=0;b=1;c=0;d=0;e=0;f=0;g=0;h=0;s0=0;s1=0;s2=1;#100;
+        a=0;b=0;c=1;d=0;e=0;f=0;g=0;h=0;s0=0;s1=1;s2=0;#100;
+        a=0;b=0;c=0;d=1;e=0;f=0;g=0;h=0;s0=0;s1=1;s2=1;#100;
+        a=0;b=0;c=0;d=0;e=1;f=0;g=0;h=0;s0=1;s1=0;s2=0;#100;
+        a=0;b=0;c=0;d=0;e=0;f=1;g=0;h=0;s0=1;s1=0;s2=1;#100;
+        a=0;b=0;c=0;d=0;e=0;f=0;g=1;h=0;s0=1;s1=1;s2=0;#100;
+        a=0;b=0;c=0;d=0;e=0;f=0;g=0;h=1;s0=1;s1=1;s2=1;#100;
+    end
+endmodule
+
+Code for Demux 1 to 2:-
+------------------------
+module Demux1to2(
+    input d,s,
+    output a,b
+    );
+    and(a,d,!s);
+    and(b,d,s);
+    
+endmodule
+
+Test Bench:-
+-------------
+module Demux1to2_tb;
+reg d,s;
+wire a,b;
+Demux1to2 uut(.d(d),.s(s),.a(a),.b(b));
+initial
+    begin
+        d=0;s=0;#100;
+        d=0;s=1;#100;
+        d=1;s=0;#100;
+        d=1;s=1;#100;
+    end
+endmodule
+
+Code for Demux 1 to 4:-
+------------------------
+module Demux1to4(
+    input d,s0,s1,
+    output a,b,c,e
+    );
+    wire w1,w2;
+    Demux1to2 d1 (.d(d),.s(s0),.a(w1),.b(w2));
+    Demux1to2 d2 (.d(w1),.s(s1),.a(a),.b(b));
+    Demux1to2 d3 (.d(w2),.s(s1),.a(c),.b(e));
+endmodule
+
+Test Bench::-
+--------------
+module Demux1to4_tb;
+reg d,s0,s1;
+wire a,b,c,e;
+Demux1to4 uut(.d(d),.s0(s0),.s1(s1),.a(a),.b(b),.c(c),.e(e));
+initial
+    begin
+        d=0;s0=0;s1=0;#100;
+        d=1;s0=0;s1=0;#100;
+        d=1;s0=0;s1=1;#100;
+        d=1;s0=1;s1=0;#100;
+        d=1;s0=1;s1=1;#100;
+    end
+endmodule
+
+Code for Demux 1 to 8:-
+------------------------
+module Demux1to8(
+    input d,s0,s1,s2,
+    output a,b,c,e,f,g,h,i
+    );
+    Demux1to2 d5 (.d(d),.s(s0),.a(w1),.b(w2));
+    Demux1to4 d6 (.d(w1),.s0(s1),.s1(s2),.a(a),.b(b),.c(c),.e(e));
+    Demux1to4 d7 (.d(w2),.s0(s1),.s1(s2),.a(f),.b(g),.c(h),.e(i));
+endmodule
+
+Test Bench:-
+--------------
+module Demux1to8_tb;
+reg d,s0,s1,s2;
+wire a,b,c,e,f,g,h,i;
+Demux1to8 uut(.d(d),.s0(s0),.s1(s1),.s2(s2),.a(a),.b(b),.c(c),.e(e),.f(f),.g(g),.h(h),.i(i));
+initial
+    begin
+        d=0;s0=0;s1=0;s2=0;#100;
+        d=1;s0=0;s1=0;s2=0;#100;
+        d=1;s0=0;s1=0;s2=1;#100;
+        d=1;s0=0;s1=1;s2=0;#100;
+        d=1;s0=0;s1=1;s2=1;#100;
+        d=1;s0=1;s1=0;s2=0;#100;
+        d=1;s0=1;s1=0;s2=1;#100;
+        d=1;s0=1;s1=1;s2=0;#100;
+        d=1;s0=1;s1=1;s2=1;#100;    
+    end 
+endmodule
+
